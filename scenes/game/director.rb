@@ -57,6 +57,8 @@ module Game
         #	@start_y = mouse_pos_y if Input.mouse_down?(M_LBUTTON)
         #クリック終了後のx,y座標
         #p @current
+        #移動時(押されている間))
+        move_shot if Input.mouse_down?(M_LBUTTON)
         if Input.mouse_release?(M_LBUTTON)
           last_shoot
           #start_time2 = Time.now    # 時間カウントを始める
@@ -64,7 +66,7 @@ module Game
         end
       end
 
-      if @current.body.pos.y <= 555    # 臨時的な措置で5秒後に１番下がしまる
+      if @current.body.pos.y <= 555    # 一定値より上に行ったら固定バーを復活
         @walls << CPStaticBox.new(0, 550, 500, 555)
         @space.add(CPStaticBox.new(0, 550, 500, 555))
       end
@@ -102,6 +104,12 @@ module Game
     end
 
     private
+
+    def move_shot
+      @move_x = Input.mouse_pos_x
+      @move_y = Input.mouse_pos_y
+      Window.draw_line(@start_x, @start_y, @move_x, @move_y, C_YELLOW, z=0)
+    end
 
     def start_shoot
       @start_x = Input.mouse_pos_x    # インスタンス変数に格納
