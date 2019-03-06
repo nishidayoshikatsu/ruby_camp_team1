@@ -14,7 +14,7 @@ end
 module Result
   class Director
     def initialize
-      @bg_img = Image.load('result.png')
+      @bg_img = Image.load('./images/result.png')
     #   @font = Font.new(24)
     end
 

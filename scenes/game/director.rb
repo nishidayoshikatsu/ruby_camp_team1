@@ -28,7 +28,7 @@ module Game
       end
 
       @start_time = Time.now    # 時間カウントを始める
-      @limit = 300              # 制限時間の設定
+      @limit = 10              # 制限時間の設定
 
       @push_count = 0
 
@@ -85,7 +85,9 @@ module Game
 
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
 
-      #scene_transition    # シーン遷移
+      if count == 0
+        scene_transition    # シーン遷移
+      end
 
     end
 
@@ -114,7 +116,7 @@ module Game
     end
 
     def scene_transition
-      Scene.move_to(:ending) unless @current
+      Scene.move_to(:result)
     end
 
     """
