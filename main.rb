@@ -20,7 +20,7 @@ Window.width = 500
 Window.height = 650
 
 Scene.add(Opening::Director.new, :opening)
-#Scene.add(Option::Director.new, :option)
+Scene.add(Option::Director.new, :option)
 Scene.add(Game::Director.new, :game)
 Scene.add(Result::Director.new, :result)
 Scene.move_to :opening

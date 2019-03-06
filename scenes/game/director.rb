@@ -68,12 +68,14 @@ module Game
         @walls << CPStaticBox.new(0, 550, 500, 555)
         @space.add(CPStaticBox.new(0, 550, 500, 555))
       end
+
       """
       if limit_time % 10 >= -1 && limit_time % 10 <= 1
         @space.gravity = CP::Vec2.new(0, 500)    # 物理演算空間に重力を設定(yを+方向に)
       end
       """
-      p @current.body.v.x
+
+      #p "x方向の速度" + @current.body.v.x + "　　y方向の速度" + @current.body.v.y
       if @current.body.v.x <= 100 && @current.body.v.x >= -100 && @current.body.v.y <= 100 && @current.body.v.y >= -100
         @current.body.v.x = 0
         @current.body.v.y = 0
