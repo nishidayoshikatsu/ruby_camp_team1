@@ -28,6 +28,8 @@ module Game
         @space.add(wall)      # 壁を物理的に追加
       end
 
+      @wall = CPStaticBox.new(0, 550, 500, 555)
+
       #@start_x = 0
       #@start_y = 0
 
@@ -39,8 +41,12 @@ module Game
     # main.rb側のWindow.loop内で呼ばれるメソッド
     def play
       if Input.key_push?(K_SPACE) && @balls.all?{|ball| ball.on_stage == false}   # 全てのボールのon_stageフラグがfalseの時
+        puts "flag全部falseだよ"
         @balls << Ball.new(250-15, 600, 15, 1, C_BLUE, 0.9, 1)
+        @space.add(@balls.last)
         @key_touch += 1
+        @walls.pop
+        @space.remove(@wall)
       end
       @limit -= 1 #1フレームごとに－1する
 
@@ -49,6 +55,7 @@ module Game
 
       @walls.each(&:draw)   # よくわからない。。。書かないと表示されない
 
+      """
       @balls.each do |ball|
         #puts ball
         ball.move
@@ -59,18 +66,28 @@ module Game
         end
       end
       """
-      if @current.body.pos.y <= 555    # 臨時的な措置で5秒後に１番下がしまる
-        @walls << CPStaticBox.new(0, 550, 500, 555)
-        @space.add(CPStaticBox.new(0, 550, 500, 555))
-      end
-      """
 
-      """
-      puts @balls[0]
-      puts @balls
-      @balls[@key_touch].move(@balls[@key_touch])
-      @ball[@key_touch].draw
-      """
+      @balls.each do |ball|
+        if @balls[@key_touch] ==  ball
+          puts "新しいボール指定"
+          @balls[@key_touch].move
+          @balls[@key_touch].draw
+
+          if @balls[@key_touch].body.p.y <= 550    # 上のゾーンでしまる
+            @space.add(@wall) unless @walls[3]
+            @walls[3] = @wall
+            #puts @walls
+            #if Input.key_push?(K_SPACE) == false
+            #  @walls.pop()
+            #end
+          end
+
+        else
+          ball.other_move
+          ball.draw
+        end
+      end
+
 
       # 1つのボールに対する処理が終了した段階で消すかどうかの判定
       """
