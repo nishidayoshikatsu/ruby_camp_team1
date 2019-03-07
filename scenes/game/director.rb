@@ -4,7 +4,7 @@ module Game
     #attr_accessor :start_x
     #attr_accessor :start_y
 
-    LIMIT_TIME = 10 #ゲームの制限時間を設定
+    LIMIT_TIME = 100 #ゲームの制限時間を設定
     def initialize
       #@bg_img = Image.load('images/opening_bg.png')   # 背景の設定
       @bg_img = Image.new(500, 650, color=C_RED)    # 背景の設定
@@ -33,6 +33,17 @@ module Game
       #@start_x = 0
       #@start_y = 0
 
+      @image = Image.load('images/ruby_image.png')
+
+      @obstacles = []
+      5.times do
+        x = rand(385) + 30
+        y = rand(385) + 30
+        obstacle = RubyStaticBox.new(x, y)
+        @space.add(obstacle)
+        @obstacles << obstacle
+      end
+
       @key_touch = 0
 
       @limit = 60 * LIMIT_TIME             # フレーム数 * 制限時間
@@ -41,7 +52,7 @@ module Game
     # main.rb側のWindow.loop内で呼ばれるメソッド
     def play
       if Input.key_push?(K_SPACE) && @balls.all?{|ball| ball.on_stage == false}   # 全てのボールのon_stageフラグがfalseの時
-        puts "flag全部falseだよ"
+        #puts "flag全部falseだよ"
         @balls << Ball.new(250-50, 550, 50, 1, C_BLUE, 0.9, 1)
         @space.add(@balls.last)
         @key_touch += 1
@@ -55,21 +66,11 @@ module Game
 
       @walls.each(&:draw)   # よくわからない。。。書かないと表示されない
 
-      """
-      @balls.each do |ball|
-        #puts ball
-        ball.move
-        ball.draw
-        if ball.body.p.y <= 550    # 上のゾーンでしまる
-          @walls << CPStaticBox.new(0, 550, 500, 555)
-          @space.add(CPStaticBox.new(0, 550, 500, 555))
-        end
-      end
-      """
+      wind
 
       @balls.each do |ball|
         if @balls[@key_touch] ==  ball
-          puts "新しいボール指定"
+          #puts "新しいボール指定"
           @balls[@key_touch].move
           @balls[@key_touch].draw
 
@@ -90,23 +91,25 @@ module Game
 
 
       # 1つのボールに対する処理が終了した段階で消すかどうかの判定
-      """
+
       all_cnt = 0
       t_cnt = 0
-      puts C_BLUE
       500.times do |i|
-        30.times do |j|
+        50.times do |j|
           all_cnt += 1
-          if Image.compare(i, j, color=C_BLUE)
+          if @balls#compare(i, j, color=[0,0, 255])
+            #puts Image#compare(i, j, color=[0,0,0])
             t_cnt += 1
           end
         end
       end
       # 横のラインがボールでどのくらい埋められているか
-      if t_cnt / all_cnt >= 0.6
-
+      if t_cnt*1.0 / all_cnt >= 0.6
+        puts t_cnt/all_cnt
+        puts C_BLUE
+        puts "うまったwww"
       end
-      """
+
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
 
       Scene.score = 100
@@ -116,6 +119,76 @@ module Game
         scene_transition    # シーン遷移
       end
 
+    end
+
+    def wind
+      @wind_name = "風"
+      #風発生
+      def wind_S_start
+          @space.gravity = CP::Vec2.new(30, 0)
+          @wind_name = "弱風"
+      end
+      def wind_M_start
+          @space.gravity = CP::Vec2.new(70, 0)
+          @wind_name = "中風"
+      end
+      def wind_L_start
+          @space.gravity = CP::Vec2.new(100, 0)
+          @wind_name = "強風"
+      end
+
+      #風を止ませる
+      def wind_end
+        @space.gravity = CP::Vec2.new(0, 0)
+      end
+
+      @wind_index= 100
+      @wind_count = 0
+
+      #40s ,30sの時に風を発生
+      if @limit == 1800  || @limit  == 2400
+        @wind_index = rand(6)
+      end
+
+
+      if 25 <= @limit / 60 && @limit / 60 < 30 || 35 <= @limit / 60 && @limit / 60 < 40
+        Window.draw_font(100, 100,"#{@wind_name}発生中\n\n\n～～～～＞",@font)
+        Window.draw_font(150, 150,"～～～～＞",@font)
+      end
+
+      while @wind_count != 300
+        if @wind_index <= 2
+    #			Window.draw_font(100, 100,"風発生中\n\n\n～～～～＞",@font)
+    #			Window.draw_font(150, 150,"～～～～＞",@font)
+          wind_S_start
+        elsif @wind_index <= 4
+    #			Window.draw_font(100, 100,"中風発生中\n\n\n～～～～＞",@font)
+    #			Window.draw_font(150, 150,"～～～～＞",@font)
+          wind_M_start
+        elsif @wind_index == 5
+    # 			Window.draw_font(100, 100,"強風発生中\n\n\n～～～～＞",@font)
+    #			Window.draw_font(150, 150,"～～～～＞",@font)
+          wind_L_start
+        end
+        @wind_count += 1
+      end
+
+      #25s, 35sの時に風を止ませる
+      if @limit / 60 == 25 || @limit / 60 == 35
+        wind_end
+      end
+
+      #オブジェクト発生
+      def make_obstacles
+        @obstacles.each do|o|
+          o.draw
+      end
+
+      end
+
+      if @limit / 60
+        make_obstacles
+      end
     end
 
     private

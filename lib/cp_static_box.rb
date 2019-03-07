@@ -1,6 +1,6 @@
 class CPStaticBox < CPBase
   attr_accessor :body, :shape
-
+  COLLISION_TYPE = 10   # 衝突判定区分
   def initialize(x1, y1, x2, y2, e = 0.8, u = 0.8)
     @body = nil
     block = Image.load('images/block_base.png')
