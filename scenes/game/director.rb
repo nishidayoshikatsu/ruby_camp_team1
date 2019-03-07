@@ -4,7 +4,7 @@ module Game
     #attr_accessor :start_x
     #attr_accessor :start_y
 
-    LIMIT_TIME = 60 #ゲームの制限時間を設定
+    LIMIT_TIME = 10 #ゲームの制限時間を設定
     def initialize
       #@bg_img = Image.load('images/opening_bg.png')   # 背景の設定
       @bg_img = Image.new(500, 650, color=C_RED)    # 背景の設定
@@ -108,6 +108,9 @@ module Game
       end
       """
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
+
+      Scene.score = 100
+      Window.draw_font(350, 10,"Score:#{Scene.score}",@font)  #スコアを表示
 
       if @limit == 0
         scene_transition    # シーン遷移
