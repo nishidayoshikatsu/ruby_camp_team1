@@ -14,7 +14,7 @@ module Game
       @space.gravity = CP::Vec2.new(0, 0)    # 物理演算空間に重力を設定(yを+方向に)
 
       #@circle = CPCircle.new(250-15, 450, 15, 1, C_BLUE, 0.9, 0.8)   # 剛体の円形を設定
-      @balls = [Ball.new(250-50, 550, 50, 1, C_BLUE, 0.9, 1)]    # 剛体の円形を設定
+      @balls = [Ball.new(250-50, 550, 35, 1, C_BLUE, 0.9, 1)]    # 剛体の円形を設定
       #@circle.apply_force(100, -500)   # x方向のみに外力を設定
 
       @walls = CPBase.walls     # 剛体の壁を設定
@@ -53,7 +53,7 @@ module Game
     def play
       if Input.key_push?(K_SPACE) && @balls.all?{|ball| ball.on_stage == false}   # 全てのボールのon_stageフラグがfalseの時
         #puts "flag全部falseだよ"
-        @balls << Ball.new(250-50, 550, 50, 1, C_BLUE, 0.9, 1)
+        @balls << Ball.new(250-50, 550, 35, 1, C_BLUE, 0.9, 1)
         @space.add(@balls.last)
         @key_touch += 1
         @walls.pop
@@ -122,7 +122,7 @@ module Game
     end
 
     def wind
-      @wind_name = "風"
+      #@wind_name = "風"
       #風発生
       def wind_S_start
           @space.gravity = CP::Vec2.new(30, 0)
@@ -152,8 +152,8 @@ module Game
 
 
       if 25 <= @limit / 60 && @limit / 60 < 30 || 35 <= @limit / 60 && @limit / 60 < 40
-        Window.draw_font(100, 100,"#{@wind_name}発生中\n\n\n～～～～＞",@font)
-        Window.draw_font(150, 150,"～～～～＞",@font)
+        Window.draw_font(10, 550,"#{@wind_name}発生中\n\n\n～～～～＞",@font)
+        #Window.draw_font(150, 150,"～～～～＞",@font)
       end
 
       while @wind_count != 300
