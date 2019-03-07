@@ -1,7 +1,8 @@
 class Ball < CPCircle
-    attr_accessor :on_stage   # 呼び出しているクラスからメソッドとしてよびだせるシンボル
+    attr_accessor :on_stage   # 呼び出しているクラスからメソッドみたいによびだせるシンボル
+    attr_accessor :coordinate
 
-    def move
+    def move(coordinate)
       #@push_count = 0
       @power_bar_width = 10
       @power_v_size = 1
@@ -10,8 +11,8 @@ class Ball < CPCircle
       puts @body.p
       puts @body.v
       if @body.p.y > 500
-        #puts @body.v.x
-        #puts @body.v.y
+        puts @body.v.x
+        puts @body.v.y
         puts "スタートゾーン"
         #クリック時のx,y座標
         start_shoot if Input.mouse_push?(M_LBUTTON)   # こっちでカウント++しちゃうと引っ張っている間もループ回ってるからifに入らなくなる
@@ -32,11 +33,11 @@ class Ball < CPCircle
           @on_stage = false
         end
       end
-      p @on_stage
+      #p @on_stage
     end
 
     def other_move    # 他の物体は固定
-      #puts "other_move"
+      puts "other_move"
       @body.v.x = 0
       @body.v.y = 0
     end
@@ -45,18 +46,18 @@ class Ball < CPCircle
       @move_x = Input.mouse_pos_x
       @move_y = Input.mouse_pos_y
       # Window.draw_line(@start_x, @start_y, @move_x, @move_y, C_YELLOW, z = 0)
-      Window.draw_line(250-50, 580, 250 + @start_x - @move_x, 615 + @start_y - @move_y, C_YELLOW, z = 0)
+      Window.draw_line(235, 585, 250 + @start_x - @move_x, 615 + @start_y - @move_y, C_YELLOW, z = 0)
     end
 
     def start_shoot
-      #puts "startはいるよ"
+      puts "startはいるよ"
       @start_x = Input.mouse_pos_x    # インスタンス変数に格納
       @start_y = Input.mouse_pos_y    # インスタンス変数に格納
     end
 
     def last_shoot(ball)
       #p @current
-      #puts "発射するぞ"
+      puts "発射するぞ"
       @last_x = Input.mouse_pos_x     # インスタンス変数に格納
       @last_y = Input.mouse_pos_y     # インスタンス変数に格納
       power_x = @start_x - @last_x    # x座標の変位を計算
@@ -64,7 +65,7 @@ class Ball < CPCircle
       @power_v_size += power_y        # y方向の力を計算
       @power_h_size += power_x        # x方向の力を計算
       #p @current
-      ball.apply_force(@power_h_size * 2.0, -@power_v_size * 2.0)   # 計算した外力を加える
+      ball.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)   # 計算した外力を加える
       #@circle.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)
       #@circle.apply_force(100, -100)
       #@current.apply_force(100, -100)

@@ -5,9 +5,10 @@ module Game
     #attr_accessor :start_y
 
     LIMIT_TIME = 100 #ゲームの制限時間を設定
+
     def initialize
       #@bg_img = Image.load('images/opening_bg.png')   # 背景の設定
-      @bg_img = Image.new(500, 650, color=C_RED)    # 背景の設定
+      @bg_img = Image.new(500, 650, color=C_GREEN)    # 背景の設定
       @font = Font.new(32)    # フォントの設定
 
       @space = CP::Space.new  # 物理演算空間を作成
@@ -44,6 +45,8 @@ module Game
         @obstacles << obstacle
       end
 
+      $point_cnt = []
+
       @key_touch = 0
 
       @limit = 60 * LIMIT_TIME             # フレーム数 * 制限時間
@@ -52,26 +55,65 @@ module Game
     # main.rb側のWindow.loop内で呼ばれるメソッド
     def play
       if Input.key_push?(K_SPACE) && @balls.all?{|ball| ball.on_stage == false}   # 全てのボールのon_stageフラグがfalseの時
-        #puts "flag全部falseだよ"
+        if @balls.length >= 3
+          @balls.delete_at(0)
+          @space.remove(@balls[0])
+          @balls.delete_at(0)
+          @space.remove(@balls[0])
+          @key_touch -= 1
+          @key_touch -= 1
+        end
+        """
+        i = 0
+        puts @balls.length
+        if @balls.length >= 2
+          @balls.each do |ball|   # ボールの削除
+            if ball.body.p.y >=450 && ball.body.p.y <= 530
+              $point_cnt << i
+              i += 1
+            end
+            puts ball.body.p
+          end
+          $point_cnt.pop
+          puts $point_cnt
+
+          j = 0
+          if $point_cnt.length >= 2
+            $point_cnt.each do |cnt|
+              puts cnt
+              puts @balls[cnt].body.p
+              @balls.delete_at(0)
+              @space.remove(@balls[0])
+              puts @balls.length
+              Window.draw_font(100, 580,削除！！！,@font)
+              @key_touch -= 1
+            end
+          end
+          $point_cnt = []
+        end
+        """
+
         @balls << Ball.new(250-50, 550, 35, 1, C_BLUE, 0.9, 1)
         @space.add(@balls.last)
         @key_touch += 1
         @walls.pop
         @space.remove(@wall)
+
       end
       @limit -= 1 #1フレームごとに－1する
 
       Window.draw(0, 0, @bg_img)  # 背景の描画
       Window.draw_font(10, 10,"Time:#{@limit / 60}",@font)  # 残り時間を描画
-
+      puts $point_cnt
       @walls.each(&:draw)   # よくわからない。。。書かないと表示されない
 
-      wind
+      wind    # 障害物発生のメソッド
 
       @balls.each do |ball|
         if @balls[@key_touch] ==  ball
+
           #puts "新しいボール指定"
-          @balls[@key_touch].move
+          @balls[@key_touch].move(@coordinate)
           @balls[@key_touch].draw
 
           if @balls[@key_touch].body.p.y <= 550    # 上のゾーンでしまる
@@ -82,32 +124,10 @@ module Game
             #  @walls.pop()
             #end
           end
-
         else
           ball.other_move
           ball.draw
         end
-      end
-
-
-      # 1つのボールに対する処理が終了した段階で消すかどうかの判定
-
-      all_cnt = 0
-      t_cnt = 0
-      500.times do |i|
-        50.times do |j|
-          all_cnt += 1
-          if @balls#compare(i, j, color=[0,0, 255])
-            #puts Image#compare(i, j, color=[0,0,0])
-            t_cnt += 1
-          end
-        end
-      end
-      # 横のラインがボールでどのくらい埋められているか
-      if t_cnt*1.0 / all_cnt >= 0.6
-        puts t_cnt/all_cnt
-        puts C_BLUE
-        puts "うまったwww"
       end
 
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
@@ -182,8 +202,7 @@ module Game
       def make_obstacles
         @obstacles.each do|o|
           o.draw
-      end
-
+        end
       end
 
       if @limit / 60
