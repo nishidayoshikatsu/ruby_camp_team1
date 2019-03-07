@@ -22,7 +22,7 @@ module Opening
 
     def scene_transition
       if Input.key_push?(K_RETURN)
-        Scene.move_to(:game)
+        Scene.move_to(:option)
         @sound.stop
       end
     end

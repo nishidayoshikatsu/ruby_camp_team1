@@ -1,8 +1,14 @@
 require_relative 'ball'
 module Game
   class Director
-    #attr_accessor :start_x
-    #attr_accessor :start_y
+
+    def options
+      @@options
+    end
+
+    def options=(value)
+      @@options = value
+    end
 
     LIMIT_TIME = 100 #ゲームの制限時間を設定
 
@@ -52,6 +58,7 @@ module Game
       $point_cnt = []
 
       @key_touch = 0
+      @point = 0
 
       @limit = 60 * LIMIT_TIME             # フレーム数 * 制限時間
     end
@@ -73,6 +80,7 @@ module Game
           @space.remove(@balls[0])
           @key_touch -= 1
           @key_touch -= 1
+          @point += 2
         end
         """
         i = 0
@@ -143,7 +151,7 @@ module Game
 
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
 
-      Scene.score = 100
+      Scene.score = @point
       Window.draw_font(350, 10,"Score:#{Scene.score}",@font, {:color => [255,0, 0]})  #スコアを表示
 
       if @limit == 0

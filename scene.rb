@@ -7,9 +7,10 @@ class Scene
     @@scenes[title.to_sym] = director   #titleをハッシュに変換したscenes要素にオブジェクトを設定
   end
 
-  def self.move_to(title)   # def self.move_to(title, opt={})
+  #def self.move_to(title)   # def self.move_to(title, opt={})
+  def self.move_to(title, opt = nil)
     @@current = title.to_sym
-    #@@scenes[@@current].options = opt
+    @@scenes[@@current].options = opt if opt
   end
 
   def self.play
