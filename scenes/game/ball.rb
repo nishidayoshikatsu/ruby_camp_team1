@@ -10,6 +10,13 @@ class Ball < CPCircle
 
       puts @body.p
       puts @body.v
+
+      if @body.p.x < 0 || @body.p.x > 500 #ボールがフィールド外に出るとresult画面に遷移
+        Scene.move_to :result
+        # puts "gameover"
+        $soundp.stop
+      end
+
       if @body.p.y > 500
         puts @body.v.x
         puts @body.v.y
@@ -31,6 +38,11 @@ class Ball < CPCircle
           @body.v.x = 0
           @body.v.y = 90
           @on_stage = false
+        else
+          @body.v.x -= 5        #ボールの速さを遅くする
+          puts "xの成分-5してる"
+          @body.v.y += 5
+          puts "yの成分-5してる"
         end
       end
       #p @on_stage
@@ -62,8 +74,8 @@ class Ball < CPCircle
       @last_y = Input.mouse_pos_y     # インスタンス変数に格納
       power_x = @start_x - @last_x    # x座標の変位を計算
       power_y = @last_y - @start_y    # y座標の変位を計算
-      @power_v_size += power_y        # y方向の力を計算
-      @power_h_size += power_x        # x方向の力を計算
+      @power_v_size += power_y * 5   # y方向の力を計算
+      @power_h_size += power_x * 5   # x方向の力を計算
       #p @current
       ball.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)   # 計算した外力を加える
       #@circle.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)

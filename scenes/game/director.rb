@@ -29,6 +29,10 @@ module Game
         @space.add(wall)      # 壁を物理的に追加
       end
 
+      $soundp = Sound.new("music/game.wav")
+      $soundp.loop_count = -1
+      @start = 0
+
       @wall = CPStaticBox.new(0, 550, 500, 555)
 
       #@start_x = 0
@@ -54,6 +58,13 @@ module Game
 
     # main.rb側のWindow.loop内で呼ばれるメソッド
     def play
+      if @start == 0
+        $soundp.set_volume(255.0)#音の大きさ
+        $soundp.play
+        @start += 1
+        puts "hellomusic"
+      end
+
       if Input.key_push?(K_SPACE) && @balls.all?{|ball| ball.on_stage == false}   # 全てのボールのon_stageフラグがfalseの時
         if @balls.length >= 3
           @balls.delete_at(0)
@@ -136,9 +147,9 @@ module Game
       Window.draw_font(350, 10,"Score:#{Scene.score}",@font)  #スコアを表示
 
       if @limit == 0
+        $soundp.stop
         scene_transition    # シーン遷移
       end
-
     end
 
     def wind
@@ -213,6 +224,7 @@ module Game
     private
 
     def scene_transition
+      $soundp.stop
       Scene.move_to(:result)
     end
 
