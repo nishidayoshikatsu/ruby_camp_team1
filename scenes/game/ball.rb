@@ -15,6 +15,7 @@ class Ball < CPCircle
         puts "スタートゾーン"
         #クリック時のx,y座標
         start_shoot if Input.mouse_push?(M_LBUTTON)   # こっちでカウント++しちゃうと引っ張っている間もループ回ってるからifに入らなくなる
+        move_shot if Input.mouse_down?(M_LBUTTON)#カーソル移動時
         #puts "start_shoot"
         #	@start_y = mouse_pos_y if Input.mouse_down?(M_LBUTTON)
         #クリック終了後のx,y座標
@@ -38,6 +39,13 @@ class Ball < CPCircle
       #puts "other_move"
       @body.v.x = 0
       @body.v.y = 0
+    end
+
+    def move_shot
+      @move_x = Input.mouse_pos_x
+      @move_y = Input.mouse_pos_y
+      # Window.draw_line(@start_x, @start_y, @move_x, @move_y, C_YELLOW, z = 0)
+      Window.draw_line(250, 615, 250 + @start_x - @move_x, 615 + @start_y - @move_y, C_YELLOW, z = 0)
     end
 
     def start_shoot

@@ -93,6 +93,7 @@ module Game
       """
       all_cnt = 0
       t_cnt = 0
+      puts C_BLUE
       500.times do |i|
         30.times do |j|
           all_cnt += 1
@@ -106,7 +107,6 @@ module Game
 
       end
       """
-
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
 
       if @limit == 0

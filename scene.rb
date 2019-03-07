@@ -15,4 +15,13 @@ class Scene
   def self.play
     @@scenes[@@current].play
   end
+
+  def self.score
+    @@score
+  end
+
+  def self.score=(s)
+    @@score = s
+  end
+
 end
