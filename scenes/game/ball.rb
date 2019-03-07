@@ -74,8 +74,8 @@ class Ball < CPCircle
       @last_y = Input.mouse_pos_y     # インスタンス変数に格納
       power_x = @start_x - @last_x    # x座標の変位を計算
       power_y = @last_y - @start_y    # y座標の変位を計算
-      @power_v_size += power_y * 5   # y方向の力を計算
-      @power_h_size += power_x * 5   # x方向の力を計算
+      @power_v_size += power_y * 3   # y方向の力を計算
+      @power_h_size += power_x * 3   # x方向の力を計算
       #p @current
       ball.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)   # 計算した外力を加える
       #@circle.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)

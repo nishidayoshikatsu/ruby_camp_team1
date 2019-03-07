@@ -42,8 +42,8 @@ module Game
 
       @obstacles = []
       5.times do
-        x = rand(385) + 30
-        y = rand(385) + 30
+        x = rand(250) + 50
+        y = rand(320) + 50
         obstacle = RubyStaticBox.new(x, y)
         @space.add(obstacle)
         @obstacles << obstacle
@@ -114,7 +114,7 @@ module Game
       @limit -= 1 #1フレームごとに－1する
 
       Window.draw(0, 0, @bg_img)  # 背景の描画
-      Window.draw_font(10, 10,"Time:#{@limit / 60}",@font)  # 残り時間を描画
+      Window.draw_font(10, 10,"Time:#{@limit / 60}",@font, {:color => [255,0, 0]})  # 残り時間を描画
       puts $point_cnt
       @walls.each(&:draw)   # よくわからない。。。書かないと表示されない
 
@@ -144,7 +144,7 @@ module Game
       @space.step(1 / 60.0)    # Windowの生成速度は1/60なので、物理演算の仮想空間も同じように時間が進むようにする
 
       Scene.score = 100
-      Window.draw_font(350, 10,"Score:#{Scene.score}",@font)  #スコアを表示
+      Window.draw_font(350, 10,"Score:#{Scene.score}",@font, {:color => [255,0, 0]})  #スコアを表示
 
       if @limit == 0
         $soundp.stop
@@ -157,15 +157,15 @@ module Game
       #風発生
       def wind_S_start
           @space.gravity = CP::Vec2.new(30, 0)
-          @wind_name = "弱風"
+          @wind_name = "風(弱)"
       end
       def wind_M_start
           @space.gravity = CP::Vec2.new(70, 0)
-          @wind_name = "中風"
+          @wind_name = "風(中)"
       end
       def wind_L_start
           @space.gravity = CP::Vec2.new(100, 0)
-          @wind_name = "強風"
+          @wind_name = "風(強)"
       end
 
       #風を止ませる
@@ -177,13 +177,12 @@ module Game
       @wind_count = 0
 
       #40s ,30sの時に風を発生
-      if @limit == 1800  || @limit  == 2400
+      if @limit == 1800  || @limit  == 3600
         @wind_index = rand(6)
       end
 
-
-      if 25 <= @limit / 60 && @limit / 60 < 30 || 35 <= @limit / 60 && @limit / 60 < 40
-        Window.draw_font(10, 550,"#{@wind_name}発生中\n\n\n～～～～＞",@font)
+      if 20 <= @limit / 60 && @limit / 60 < 30 || 50 <= @limit / 60 && @limit / 60 < 60
+        Window.draw_font(30, 580,"#{@wind_name}発生中\n\n\n～～～～＞",@font)
         #Window.draw_font(150, 150,"～～～～＞",@font)
       end
 
@@ -204,8 +203,10 @@ module Game
         @wind_count += 1
       end
 
-      #25s, 35sの時に風を止ませる
-      if @limit / 60 == 25 || @limit / 60 == 35
+
+      #20sと50sの時に風を停止
+      # limitわざわざ60かけたのは単なるバグ
+      if @limit / 60 == 20 || @limit / 60 == 50
         wind_end
       end
 
