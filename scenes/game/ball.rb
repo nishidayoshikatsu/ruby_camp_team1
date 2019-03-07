@@ -9,7 +9,7 @@ class Ball < CPCircle
 
       puts @body.p
       puts @body.v
-      if @body.p.y > 555
+      if @body.p.y > 500
         #puts @body.v.x
         #puts @body.v.y
         puts "スタートゾーン"
