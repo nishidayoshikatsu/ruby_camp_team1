@@ -1,30 +1,32 @@
 class Ball < CPCircle
-    def move(ball)
-        @push_count = 0
-        @power_bar_width = 10
-        @power_v_size = 1
-        @power_h_size = 1
+    attr_accessor :on_stage   # 呼び出しているクラスからメソッドとしてよびだせるシンボル
 
-        if @push_count == 0   # 一度だけよびだすやつ
-          #クリック時のx,y座標
-          start_shoot if Input.mouse_push?(M_LBUTTON)   # こっちでカウント++しちゃうと引っ張っている間もループ回ってるからifに入らなくなる
-          #	@start_y = mouse_pos_y if Input.mouse_down?(M_LBUTTON)
-          #クリック終了後のx,y座標
-          if Input.mouse_release?(M_LBUTTON)
-            last_shoot(ball)
-            #start_time2 = Time.now    # 時間カウントを始める
-            @push_count = 1
-          end
+    def move
+      #@push_count = 0
+      @power_bar_width = 10
+      @power_v_size = 1
+      @power_h_size = 1
+
+      if @body.p.y > 555
+        puts "スタートゾーン"
+        #クリック時のx,y座標
+        start_shoot if Input.mouse_push?(M_LBUTTON)   # こっちでカウント++しちゃうと引っ張っている間もループ回ってるからifに入らなくなる
+        #	@start_y = mouse_pos_y if Input.mouse_down?(M_LBUTTON)
+        #クリック終了後のx,y座標
+        if Input.mouse_release?(M_LBUTTON)
+          last_shoot(self)
         end
-
+      else
+        @on_stage = true
         if @body.v.x <= 100 && @body.v.x >= -100 && @body.v.y <= 100 && @body.v.y >= -100
+          puts "はいったよ"
           @body.v.x = 0
-          @body.v.y = 0
-          if @push_count == 1
-            @body.v.y = 100
-            @space.gravity = CP::Vec2.new(0, 400)    # 物理演算空間に重力を設定(yを+方向に)
-          end
+          @body.v.y = 90
+          @on_stage = false
         end
+      end
+
+      p @on_stage
     end
 
     def start_shoot
@@ -41,7 +43,7 @@ class Ball < CPCircle
       @power_v_size += power_y        # y方向の力を計算
       @power_h_size += power_x        # x方向の力を計算
       #p @current
-      ball.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)   # 計算した外力を加える
+      ball.apply_force(@power_h_size * 2.0, -@power_v_size * 2.0)   # 計算した外力を加える
       #@circle.apply_force(@power_h_size * 2.5, -@power_v_size * 2.5)
       #@circle.apply_force(100, -100)
       #@current.apply_force(100, -100)
