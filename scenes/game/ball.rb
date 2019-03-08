@@ -58,7 +58,7 @@ class Ball < CPCircle
       @move_x = Input.mouse_pos_x
       @move_y = Input.mouse_pos_y
       # Window.draw_line(@start_x, @start_y, @move_x, @move_y, C_YELLOW, z = 0)
-      Window.draw_line(235, 585, 250 + @start_x - @move_x, 615 + @start_y - @move_y, C_YELLOW, z = 0)
+      Window.draw_line(235, 585, 235 + @start_x - @move_x, 615 + @start_y - @move_y, C_YELLOW, z = 0)
     end
 
     def start_shoot
